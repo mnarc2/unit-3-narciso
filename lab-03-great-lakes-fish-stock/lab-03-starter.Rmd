@@ -17,9 +17,9 @@ By completing and submitting this lab, I certify that:
 - I may use course materials, lecture notes, R documentation/help files, and other resources explicitly approved by the instructors.
 - I understand that I am responsible for being able to explain all code and written work that I submit.
 
-**Name:** ______________________________  
-**Signature:** ___________________________  
-**Date:** _______________________________
+**Name:** Mo Narciso  
+**Signature:** Mo Narciso  
+**Date:** 10/7/26
 
 # Before you begin
 
@@ -50,7 +50,7 @@ fish_stock <- read_csv("../data/great-lakes-fish-stock.csv")
 
 **Goal:** Report how many rows and columns `fish_stock` has, using inline R, and say what one row represents.
 
-> Replace this text with your answer. Use inline R such as `` `r nrow(fish_stock)` `` and `` `r ncol(fish_stock)` ``.
+> There are `` `r nrow(fish_stock)` `` rows and `` `r ncol(fish_stock)` `` columns.
 
 ## Exercise 2 — Filter to salmon stocking events
 
@@ -59,9 +59,9 @@ fish_stock <- read_csv("../data/great-lakes-fish-stock.csv")
 ```{r filter-salmon, eval = F}
 salmon_stock <- fish_stock %>%
   filter(
-    SPECIES %in% c("___", "___", "___"),
-    !is.na(___),
-    ___ != "ON"
+    SPECIES %in% c("ATS", "CHS", "COS"),
+    !is.na(WEIGHT),
+    LAKE != "ON"
   )
 ```
 
@@ -71,7 +71,7 @@ salmon_stock <- fish_stock %>%
 
 **Interpretation (2–3 complete sentences):** How many rows and variables does `salmon_stock` have, and which variables are numeric versus character?
 
-> Replace this text with your answer.
+> There are 5131 rows and 8 variables. The character variables are LAKE, STATE_PROV, and SPECIES. The number variables are YEAR, MONTH, NO_STOCKED, AGEMONTH, and WEIGHT,
 
 ## Exercise 3 — Average fish weight in grams
 
