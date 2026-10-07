@@ -78,9 +78,9 @@ salmon_stock <- fish_stock %>%
 **Goal:** Add a column for mean individual weight in grams (`WEIGHT` is in kg).
 
 ```{r mutate-avg-weight, eval = F}
-salmon_stock <- ___ %>%
-  ___(
-    ___ = WEIGHT / NO_STOCKED * ___
+salmon_stock <- fish_stock %>%
+  mutate(
+    AVG_WEIGHT = WEIGHT / NO_STOCKED * 1000
   )
 ```
 
