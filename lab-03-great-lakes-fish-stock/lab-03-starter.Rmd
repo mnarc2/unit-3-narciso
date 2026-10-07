@@ -134,7 +134,14 @@ fish_stock %>%
 **Goal:** Faceted line plot of annual total `NO_STOCKED` for Chinook Salmon and Brook Trout.
 
 ```{r plot-chs-bkt, fig.width=8, fig.height=6}
-# Your pipeline here
+fish_stock %>%
+  group_by(YEAR, SPECIES, LAKE) %>%
+  filter(SPECIES %in% (c("CHS", "BKT"))) %>%
+  summarize( 
+    SUM_NO_STOCKED = sum(NO_STOCKED)) %>%
+  ggplot(aes(y = SUM_NO_STOCKED, x = YEAR, color = SPECIES)) +
+  geom_line()
+facet_grid('LAKE')
 ```
 
 **Interpretation (2–3 complete sentences):** Which species was stocked at a higher rate? In which lake was stocking largest? Roughly when did stocking peak in that lake?
@@ -143,10 +150,10 @@ fish_stock %>%
 
 # Submission checklist
 
-- [ ] I signed the academic-integrity statement.
-- [ ] My name and date are correct in the YAML.
-- [ ] I answered every requested question in complete sentences.
-- [ ] Exercise 1 uses inline R code.
-- [ ] All required code is in this file.
-- [ ] This document Knits without errors.
-- [ ] I committed and pushed my final changes to GitHub.
+- [x] I signed the academic-integrity statement.
+- [x] My name and date are correct in the YAML.
+- [x] I answered every requested question in complete sentences.
+- [x] Exercise 1 uses inline R code.
+- [x] All required code is in this file.
+- [x] This document Knits without errors.
+- [x] I committed and pushed my final changes to GitHub.
