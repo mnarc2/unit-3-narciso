@@ -112,12 +112,22 @@ fish_stock %>%
 **Goal:** One pipeline from `fish_stock` for `BKT`, `BNT`, `LAT`, `RBT`, and `TRT` (no year filter).
 
 ```{r summarize-trout-lakes}
-# Your pipeline here
+fish_stock %>%
+  filter(SPECIES %in% (c("BKT", "BNT", "LAT", "RBT", "TRT")),
+         !is.na(WEIGHT),
+         LAKE != "ON") %>% 
+  group_by(LAKE) %>%
+  mutate(
+    AVG_WEIGHT = mean(WEIGHT)) %>%
+  summarize(
+    MEAN_NO_STOCKED = mean(NO_STOCKED, na.rm = TRUE),
+    MEAN_WEIGHT = mean(WEIGHT, na.rm = TRUE)) %>%
+  arrange(desc(MEAN_NO_STOCKED))
 ```
 
 **Interpretation (1 complete sentence):** Which lake has the largest mean number of trout per stocking event?
 
-> Replace this text with your answer.
+> SU has the largest mean number of trout per stocking event.
 
 ## Exercise 6 — Annual CHS and BKT stocking by lake
 
