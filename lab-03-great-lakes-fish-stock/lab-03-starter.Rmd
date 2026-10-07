@@ -93,19 +93,19 @@ salmon_stock <- fish_stock %>%
 **Goal:** Mean number stocked and mean total weight per event by lake, for `YEAR > 2000`, arranged by descending mean number.
 
 ```{r summarize-salmon-lakes, eval = F}
-___ %>% 
-  group_by(___) %>% 
-  filter(YEAR > ___) %>% 
+fish_stock %>% 
+  group_by(LAKE) %>% 
+  filter(YEAR > 2000) %>% 
   summarize(
-    MEAN_NO_STOCKED = mean(___, na.rm = TRUE),
-    MEAN_WEIGHT = mean(___, ___ = ___)
+    MEAN_NO_STOCKED = mean(NO_STOCKED, na.rm = TRUE),
+    MEAN_WEIGHT = mean(WEIGHT, na.rm = TRUE)
   ) %>% 
-  arrange(desc(___))
+  arrange(desc(MEAN_NO_STOCKED))
 ```
 
 **Interpretation (1–2 complete sentences):** Which lake has the largest mean number of fish per event, and which has the largest mean weight per event?
 
-> Replace this text with your answer.
+> SU has the largest mean number of fish per event. SC has the largest mean weight. 
 
 ## Exercise 5 — Trout pipeline
 
