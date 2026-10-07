@@ -1,0 +1,198 @@
+---
+title: "HW 03 - Great Lakes fish datasets"
+author: "Insert your name here"
+date: "Insert date here"
+output:
+  html_document:
+    toc: true
+    toc_depth: 2
+---
+
+# Academic integrity and honor code
+
+By completing and submitting this homework, I certify that:
+
+- I completed the submitted work myself.
+- I did not use generative AI (including ChatGPT, Claude, Gemini, Copilot, Grok, or similar tools) to generate, debug, revise, or interpret code or written answers for this assignment.
+- I may use course materials, lecture notes, R documentation/help files, and other resources explicitly approved by the instructors.
+- I understand that I am responsible for being able to explain all code and written work that I submit.
+
+**Name:** ______________________________  
+**Signature:** ___________________________  
+**Date:** _______________________________
+
+# Before you begin
+
+Work through `hw-03-instructions.Rmd`. Keep **all submitted code in this file** and Knit frequently. Ask Dr. Gavin McNicol or TA Kayode Ayegbusi if you are still stuck after checking spelling, parentheses, and Knit errors.
+
+If `WEIGHT` imports as character, parse it before Exercise 5:
+
+```{r parse-weight, eval=FALSE}
+fish_stock <- fish_stock %>%
+  mutate(WEIGHT = parse_number(WEIGHT))
+```
+
+# Load packages and data
+
+```{r load-packages, message=FALSE, warning=FALSE}
+library(tidyverse)
+```
+
+```{r load-data, message=FALSE}
+catch_data <- readr::read_csv("https://raw.githubusercontent.com/rfordatascience/tidytuesday/master/data/2021/2021-06-08/fishing.csv")
+
+fish_stock <- read_csv("data/great-lakes-fish-stock.csv")
+```
+
+# Exercises
+
+## Exercise 1 — Select columns
+
+**Goal:** Keep `year`, `lake`, `species`, `region`, and `values` from `catch_data`, and `YEAR`, `MONTH`, `LAKE`, `STATE_PROV`, `SPECIES`, and `WEIGHT` from `fish_stock`.
+
+```{r catch-data-subset}
+# Your code here
+```
+
+```{r fish-stock-subset}
+# Your code here
+```
+
+## Exercise 2 — Glimpse the subsets
+
+**Goal:** Inspect both objects after `select()`.
+
+```{r glimpse-subsets}
+# glimpse(catch_data) and glimpse(fish_stock)
+```
+
+## Exercise 3 — Filter to Chinook Salmon in Lake Michigan
+
+**Goal:** U.S. Total Chinook Salmon catch in Lake Michigan; CHS stocking in MI from MI, WI, IL, and IN.
+
+```{r filter-catch}
+catch_data <- catch_data %>% 
+  filter(region == "U.S. Total",
+         species == "___",
+         lake == "___")
+```
+
+```{r filter-stock}
+fish_stock <- fish_stock %>% 
+  filter(___ %in% c("MI", "WI", "IL", "IN"),
+         SPECIES == "___",
+         LAKE == "MI")
+```
+
+## Exercise 4 — Row counts and year ranges
+
+**Goal:** Report `nrow`, `min(year)`, and `max(year)` for each filtered table with inline R.
+
+> Replace this text with three complete sentences that use inline R code.
+
+## Exercise 5 — Annual stocking totals
+
+**Goal:** One row per year in `fish_stock_yearly`, with `STOCK_WEIGHT_YR = sum(WEIGHT, na.rm = TRUE)`.
+
+```{r stock-yearly}
+# Your group_by / summarize pipeline here
+```
+
+## Harmonize names and units
+
+Set `eval=TRUE` after Exercise 5 runs successfully.
+
+```{r finalize-fish-stock, eval=FALSE}
+fish_stock_yearly <- fish_stock_yearly %>% 
+  rename(year = YEAR) %>% 
+  mutate(stock_weight_yr_lbs = as.integer(STOCK_WEIGHT_YR * 2.205 / 1000)) %>% 
+  select(year, stock_weight_yr_lbs)
+```
+
+```{r finalize-catch-data, eval=FALSE}
+catch_data <- catch_data %>% 
+  rename(catch_weight_yr_lbs = values)
+```
+
+## Exercise 6 — Six joins
+
+**Goal:** Join on `year` six ways and explain which rows each join keeps.
+
+```{r left-join}
+# catch_data %>% left_join(fish_stock_yearly)
+```
+
+> Replace this text with 1–2 sentences on `left_join()`.
+
+```{r right-join}
+# catch_data %>% right_join(fish_stock_yearly)
+```
+
+> Replace this text with 1–2 sentences on `right_join()`.
+
+```{r inner-join}
+# catch_data %>% inner_join(fish_stock_yearly)
+```
+
+> Replace this text with 1–2 sentences on `inner_join()`.
+
+```{r full-join}
+# catch_data %>% full_join(fish_stock_yearly)
+```
+
+> Replace this text with 1–2 sentences on `full_join()`.
+
+```{r anti-join-v1}
+catch_data %>% 
+  anti_join(fish_stock_yearly)
+```
+
+> Replace this text with 1–2 sentences on this `anti_join()`.
+
+```{r anti-join-v2}
+fish_stock_yearly %>% 
+  anti_join(catch_data)
+```
+
+> Replace this text with 1–2 sentences on this `anti_join()`.
+
+## Exercise 7 — Pivot to long format
+
+**Goal:** `left_join()` then `pivot_longer()` so one column is `activity` and one is `weight_lbs`.
+
+```{r pivot-longer}
+catch_data %>% 
+  left_join(___) %>% 
+  ___(names_to = "activity",
+               values_to = "___",
+               cols = 5:6)
+```
+
+## Exercise 8 — Line plot of catch and stocking
+
+**Goal:** Extend Exercise 7 with `ggplot()`, `geom_line()`, and `theme_bw()`.
+
+```{r final-visualization, fig.width=7, fig.height=4.5}
+catch_data %>% 
+  left_join(___) %>% 
+  ___(names_to = "activity",
+               values_to = "___",
+               cols = 5:6) %>% 
+  ggplot(aes(x = ___, y = ___, color = ___)) +
+  geom_line() +
+  theme_bw()
+```
+
+**Interpretation (1–3 complete sentences):** What happened to Lake Michigan Chinook Salmon stocking and catch after the early 1990s?
+
+> Replace this text with your answer.
+
+# Submission checklist
+
+- [ ] I signed the academic-integrity statement.
+- [ ] My name and date are correct in the YAML.
+- [ ] I answered every requested question in complete sentences.
+- [ ] Exercise 4 uses inline R code.
+- [ ] All six joins have a short narrative.
+- [ ] This document Knits without errors.
+- [ ] I committed and pushed my final changes to GitHub.

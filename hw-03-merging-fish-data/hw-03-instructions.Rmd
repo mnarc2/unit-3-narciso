@@ -1,0 +1,287 @@
+---
+title: "HW 03 - Great Lakes fish datasets"
+output: 
+  tufte::tufte_html:
+    css: ../hw.css
+    tufte_variant: "envisioned"
+    highlight: pygments
+link-citations: yes
+---
+
+```{r setup, include = FALSE}
+knitr::opts_chunk$set(
+  eval = FALSE,
+  out.width = "80%",
+  fig.asp = 0.618,
+  fig.width = 10,
+  dpi = 300
+)
+```
+
+```{r photo, fig.margin = TRUE, echo = FALSE, fig.width = 3, fig.cap = "Young fish released from a stocking pipe into a river. Photo from the Great Lakes Fish Stocking Database.", eval = TRUE}
+knitr::include_graphics("../img/stocking.jpeg")
+```
+
+# Academic integrity and honor code
+
+This homework is designed to help you practice joining and reshaping data frames. **Generative AI tools are not permitted for this assignment.** This includes ChatGPT, Claude, Gemini, Copilot, Grok, and similar tools that can generate or revise code, written answers, interpretations, or assignment content.
+
+By completing and submitting this homework, I certify that:
+
+- I completed the submitted work myself.
+- I did not use generative AI to generate, debug, revise, or interpret code or written answers for this assignment.
+- I may use course materials, lecture notes, R documentation/help files, and other resources explicitly approved by the instructors.
+- I understand that I am responsible for being able to explain all code and written work that I submit.
+
+**Name:** ______________________________  
+**Signature:** ___________________________  
+**Date:** _______________________________
+
+> **Important:** Signing this statement is part of the assignment. The same statement appears in your starter file; complete it there as well.
+
+# Homework overview
+
+You will continue with the [Great Lakes commercial fish catch records](http://www.glfc.org/great-lakes-databases.php) and the [Great Lakes Fish Stocking database](http://www.glfc.org/fishstocking/index.htm), both maintained by the U.S. Fish and Wildlife Service.
+
+The goal of the assignment is a merged table in which **each row is one year of Lake Michigan Chinook Salmon catch and stocking**, with both weights in the same units (thousands of pounds).
+
+## Learning goals
+
+By the end of this homework, you should be able to:  
+
+  * Select, filter, and summarize two related tables until they share a join key.
+  * Convert units and rename columns so a join is valid.
+  * Explain what `left_join()`, `right_join()`, `inner_join()`, `full_join()`, and `anti_join()` keep.
+  * Reshape joined columns with `pivot_longer()` and plot the long table.
+
+## Deliverable
+
+Complete **`hw-03-starter.Rmd`**. Your finished starter file should contain your code, plots, and written responses and should Knit successfully from top to bottom.
+
+## Reproducibility rule
+
+Your analysis must work from top to bottom. Knit frequently.
+
+## Before asking for help
+
+Check spelling, parentheses, quotation marks, package loading, and Knit errors first. Then ask Dr. Gavin McNicol or TA Kayode Ayegbusi and show them the code and the error.
+
+# Getting started
+
+If you are reading a knitted copy of these instructions, treat the steps below as review.
+
+- Open your Unit 3 GitHub repository (`unit-3-yourlastname` under the `EAES-380` organization).
+- Clone it into RStudio Cloud if you have not already.
+- Open `hw-03-instructions.Rmd` and Knit it.
+- Open `hw-03-starter.Rmd`. **This is the file you will complete.**
+
+# Warm-up: R Markdown + Git
+
+Open `hw-03-starter.Rmd`, put your name and today's date in the YAML, sign the honor code, Knit, commit (`Update author and honor code`), and push. Confirm that both the `.Rmd` and the knitted output are on GitHub.
+
+# Packages and data
+
+```{r load-packages-demo, message = FALSE}
+library(tidyverse)
+```
+
+```{r load-data-demo, message = FALSE}
+catch_data <- readr::read_csv("https://raw.githubusercontent.com/rfordatascience/tidytuesday/master/data/2021/2021-06-08/fishing.csv")
+
+fish_stock <- read_csv("data/great-lakes-fish-stock.csv")
+```
+
+```{marginfigure}
+If `WEIGHT` imports as character, parse it with `parse_number(WEIGHT)` before you summarize. A few cells contain commas or `/k` notes.
+```
+
+Look at both objects with `glimpse()` in your starter file (Exercise 2) once you have selected columns. Full variable lists are in the data dictionary at the bottom of this document.
+
+# Exercises
+
+Complete each exercise in `hw-03-starter.Rmd`. Write interpretations in complete sentences.
+
+## Exercise 1 — Select columns
+
+**Goal:** Keep only the columns you will need.
+
+Use `select()` to keep `year`, `lake`, `species`, `region`, and `values` from `catch_data`, and `YEAR`, `MONTH`, `LAKE`, `STATE_PROV`, `SPECIES`, and `WEIGHT` from `fish_stock`. Overwrite the original objects with `<-`.
+
+### Exercise 1 checkpoint
+
+🧶 ✅ ⬆️ **Knit, commit, and push.** Suggested commit message: `Complete Exercise 1`.
+
+## Exercise 2 — Glimpse the subsets
+
+**Goal:** Confirm the selected columns.
+
+Create a labeled chunk that runs `glimpse()` on both objects.
+
+## Exercise 3 — Filter to Chinook Salmon in Lake Michigan
+
+**Goal:** Keep U.S. Chinook Salmon records for Lake Michigan.
+
+Chinook Salmon is `"Chinook Salmon"` in `catch_data` and `"CHS"` in `fish_stock`. Lake Michigan is `"Michigan"` in `catch_data` and `"MI"` in `fish_stock`. Restrict stocking events to the U.S. states that border Lake Michigan: Michigan, Wisconsin, Illinois, and Indiana.
+
+```{r filter-catch-demo, echo = TRUE, eval = F}
+catch_data <- catch_data %>% 
+  filter(region == "U.S. Total",
+         species == "___",
+         lake == "___")
+```
+
+```{r filter-stock-demo, echo = TRUE, eval = F}
+fish_stock <- fish_stock %>% 
+  filter(___ %in% c("MI", "WI", "IL", "IN"),
+         SPECIES == "___",
+         LAKE == "MI")
+```
+
+## Exercise 4 — Row counts and year ranges
+
+**Goal:** Report facts from the filtered tables with inline R.
+
+In three separate sentences, state how many rows are in each filtered data frame and the first (`min`) and last (`max`) year in each. Use inline code and `$` to pull a column, for example `min(catch_data$year)`.
+
+```{marginfigure}
+`fish_stock` still has many more rows than `catch_data` because each stocking **event** (often a month) is its own row. Catch is already annual.
+```
+
+### Exercise 4 checkpoint
+
+🧶 ✅ ⬆️ **Knit, commit, and push.** Suggested commit message: `Complete Exercises 2–4`.
+
+## Exercise 5 — Annual stocking totals
+
+**Goal:** Collapse stocking events to one row per year.
+
+Use `group_by()` and `summarize()` so each row of a new object `fish_stock_yearly` is one year. Name the summed column `STOCK_WEIGHT_YR` and use `sum(WEIGHT, na.rm = TRUE)`.
+
+### Exercise 5 checkpoint
+
+🧶 ✅ ⬆️ **Knit, commit, and push.** Suggested commit message: `Complete Exercise 5`.
+
+## Harmonize names and units
+
+The tables still disagree in two ways:
+
+- `catch_data` uses lowercase names, and `values` is already in **thousands of pounds**.
+- `fish_stock_yearly` uses uppercase names, and `STOCK_WEIGHT_YR` is in **kilograms**.
+
+Run the two provided chunks in your starter file (set `eval` to `TRUE`). They rename the year column, convert kilograms to thousands of pounds, and rename catch `values`.
+
+```{marginfigure}
+1 kg ≈ 2.205 lb, so thousands of pounds = kg × 2.205 / 1000. 
+```
+
+```{r finalize-fish-stock-demo, echo = TRUE}
+fish_stock_yearly <- fish_stock_yearly %>% 
+  rename(year = YEAR) %>% 
+  mutate(stock_weight_yr_lbs = as.integer(STOCK_WEIGHT_YR * 2.205 / 1000)) %>% 
+  select(year, stock_weight_yr_lbs)
+```
+
+```{r finalize-catch-data-demo, echo = TRUE}
+catch_data <- catch_data %>% 
+  rename(catch_weight_yr_lbs = values)
+```
+
+Confirm that both tables now have a `year` column and a weight column in thousands of pounds.
+
+## Exercise 6 — Six joins
+
+**Goal:** Join the two year-level tables six ways and explain what each join keeps.
+
+Join `catch_data` and `fish_stock_yearly` with `left_join()`, `right_join()`, `inner_join()`, `full_join()`, and `anti_join()` in both directions. Look at each result. For every join, write 1–2 sentences: which rows were kept, and what R does when a year exists on only one side.
+
+The two `anti_join()` chunks are filled in for you; write narrative for those as well.
+
+```{r anti-join-v1-demo, echo = TRUE}
+catch_data %>% 
+  anti_join(fish_stock_yearly)
+```
+
+```{r anti-join-v2-demo, echo = TRUE}
+fish_stock_yearly %>% 
+  anti_join(catch_data)
+```
+
+### Exercise 6 checkpoint
+
+🧶 ✅ ⬆️ **Knit, commit, and push.** Suggested commit message: `Complete Exercise 6`.
+
+## Exercise 7 — Pivot to long format
+
+**Goal:** Stack the two weight columns into one `weight_lbs` column plus an `activity` label.
+
+Start from `catch_data`, `left_join()` the yearly stocking table, then `pivot_longer()`. After the join the two weight columns should be in positions 5 and 6 if you kept `year`, `lake`, `species`, `region`, and the two weights.
+
+```{r pivot-longer-demo, echo = TRUE, eval = F}
+catch_data %>% 
+  left_join(___) %>% 
+  ___(names_to = "activity",
+               values_to = "___",
+               cols = 5:6)
+```
+
+### Exercise 7 checkpoint
+
+🧶 ✅ ⬆️ **Knit, commit, and push.** Suggested commit message: `Complete Exercise 7`.
+
+## Exercise 8 — Line plot of catch and stocking
+
+**Goal:** Extend the Exercise 7 pipeline into a line plot.
+
+Keep every year from `catch_data` (`left_join`), pivot longer, then plot. Map `year` to x, `weight_lbs` to y, and `activity` to color. Add `geom_line()` and `theme_bw()`.
+
+In 1–3 complete sentences, describe the trends in Lake Michigan Chinook Salmon stocking and catch since the early 1990s.
+
+```{r final-visualization-demo, echo = TRUE, eval = F}
+catch_data %>% 
+  left_join(___) %>% 
+  ___(names_to = "activity",
+               values_to = "___",
+               cols = 5:6) %>% 
+  ggplot(aes(x = ___, y = ___, color = ___)) +
+  geom_line() +
+  theme_bw()
+```
+
+🧶 ✅ ⬆️ Knit, commit, and push with a message such as `Complete HW 3`. Confirm GitHub shows the final files.
+
+# Submission checklist
+
+- [ ] I signed the academic-integrity statement in both files.
+- [ ] My name and date are correct in the starter YAML.
+- [ ] I answered every requested question in complete sentences.
+- [ ] Exercise 4 uses inline R code.
+- [ ] All six joins have a short narrative.
+- [ ] The document Knits from top to bottom.
+- [ ] I committed and pushed the final version to GitHub.
+
+# Data dictionary
+
+### fishing.csv (`catch_data`)
+
+| variable    | class     | description                                                         |
+|:------------|:----------|:--------------------------------------------------------------------|
+| year        | double    | Year of the estimate                                                |
+| lake        | character | Lake name                                                           |
+| species     | character | Species of fish                                                     |
+| grand_total | double    | Grand total reported for that lake-species-year                     |
+| comments    | character | Notes from the data providers                                       |
+| region      | character | U.S. or Canadian reporting region (coding is inconsistent)          |
+| values      | double    | Harvest rounded to the nearest thousand pounds                      |
+
+### great-lakes-fish-stock.csv (`fish_stock`)
+
+| variable    | class     | description                                            |
+|:------------|:----------|:-------------------------------------------------------|
+| YEAR        | double    | Year of stocking, YYYY                                 |
+| MONTH       | double    | Month of stocking (not always reported)                |
+| LAKE        | character | Great Lake, abbreviated                                |
+| STATE_PROV  | character | State or province, abbreviated                         |
+| SPECIES     | character | Species code                                           |
+| NO_STOCKED  | double    | Number of fish stocked                                 |
+| AGEMONTH    | double    | Age in months (not always reported)                    |
+| WEIGHT      | double    | Total weight of fish stocked, in kilograms             |
