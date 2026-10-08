@@ -103,21 +103,23 @@ fish_stock <- fish_stock %>%
 **Goal:** One row per year in `fish_stock_yearly`, with `STOCK_WEIGHT_YR = sum(WEIGHT, na.rm = TRUE)`.
 
 ```{r stock-yearly}
-# Your group_by / summarize pipeline here
+fish_stock_yearly <- fish_stock %>%
+  group_by(YEAR) %>%
+  summarize (STOCK_WEIGHT_YR = sum(WEIGHT, na.rm = TRUE))
 ```
 
 ## Harmonize names and units
 
 Set `eval=TRUE` after Exercise 5 runs successfully.
 
-```{r finalize-fish-stock, eval=FALSE}
+```{r finalize-fish-stock, eval=TRUE}
 fish_stock_yearly <- fish_stock_yearly %>% 
   rename(year = YEAR) %>% 
   mutate(stock_weight_yr_lbs = as.integer(STOCK_WEIGHT_YR * 2.205 / 1000)) %>% 
   select(year, stock_weight_yr_lbs)
 ```
 
-```{r finalize-catch-data, eval=FALSE}
+```{r finalize-catch-data, eval=TRUE}
 catch_data <- catch_data %>% 
   rename(catch_weight_yr_lbs = values)
 ```
