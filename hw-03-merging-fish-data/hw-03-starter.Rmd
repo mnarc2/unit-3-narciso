@@ -54,15 +54,13 @@ fish_stock <- read_csv("../data/great-lakes-fish-stock.csv")
 **Goal:** Keep `year`, `lake`, `species`, `region`, and `values` from `catch_data`, and `YEAR`, `MONTH`, `LAKE`, `STATE_PROV`, `SPECIES`, and `WEIGHT` from `fish_stock`.
 
 ```{r catch-data-subset}
-catch_data %>%
+selected_catch_data <- catch_data %>%
   select("year", "lake", "species", "region", "values")
-
-fish_stock %>%
-  select("YEAR", "MONTH", "LAKE", "STATE_PROV", "SPECIES", "WEIGHT")
 ```
 
 ```{r fish-stock-subset}
-# Your code here
+selected_fish_stock <- fish_stock %>%
+  select("YEAR", "MONTH", "LAKE", "STATE_PROV", "SPECIES", "WEIGHT")
 ```
 
 ## Exercise 2 — Glimpse the subsets
@@ -70,7 +68,8 @@ fish_stock %>%
 **Goal:** Inspect both objects after `select()`.
 
 ```{r glimpse-subsets}
-# glimpse(catch_data) and glimpse(fish_stock)
+glimpse(catch_data) 
+glimpse(fish_stock)
 ```
 
 ## Exercise 3 — Filter to Chinook Salmon in Lake Michigan
