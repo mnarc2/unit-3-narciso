@@ -7,6 +7,9 @@ output:
     toc: true
     toc_depth: 2
 ---
+```{r setup, include = FALSE}
+knitr::opts_chunk$set(eval = FALSE)
+```
 
 # Academic integrity and honor code
 
@@ -17,9 +20,9 @@ By completing and submitting this homework, I certify that:
 - I may use course materials, lecture notes, R documentation/help files, and other resources explicitly approved by the instructors.
 - I understand that I am responsible for being able to explain all code and written work that I submit.
 
-**Name:** ______________________________  
-**Signature:** ___________________________  
-**Date:** _______________________________
+**Name:** Mo Narciso  
+**Signature:** Mo Narciso  
+**Date:** 10/7/26
 
 # Before you begin
 
@@ -41,7 +44,7 @@ library(tidyverse)
 ```{r load-data, message=FALSE}
 catch_data <- readr::read_csv("https://raw.githubusercontent.com/rfordatascience/tidytuesday/master/data/2021/2021-06-08/fishing.csv")
 
-fish_stock <- read_csv("data/great-lakes-fish-stock.csv")
+fish_stock <- read_csv("../data/great-lakes-fish-stock.csv")
 ```
 
 # Exercises
@@ -51,7 +54,11 @@ fish_stock <- read_csv("data/great-lakes-fish-stock.csv")
 **Goal:** Keep `year`, `lake`, `species`, `region`, and `values` from `catch_data`, and `YEAR`, `MONTH`, `LAKE`, `STATE_PROV`, `SPECIES`, and `WEIGHT` from `fish_stock`.
 
 ```{r catch-data-subset}
-# Your code here
+catch_data %>%
+  select("year", "lake", "species", "region", "values")
+
+fish_stock %>%
+  select("YEAR", "MONTH", "LAKE", "STATE_PROV", "SPECIES", "WEIGHT")
 ```
 
 ```{r fish-stock-subset}
