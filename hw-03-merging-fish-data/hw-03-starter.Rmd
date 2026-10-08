@@ -112,14 +112,14 @@ fish_stock_yearly <- fish_stock %>%
 
 Set `eval=TRUE` after Exercise 5 runs successfully.
 
-```{r finalize-fish-stock, eval=TRUE}
+```{r finalize-fish-stock, eval=FALSE}
 fish_stock_yearly <- fish_stock_yearly %>% 
   rename(year = YEAR) %>% 
   mutate(stock_weight_yr_lbs = as.integer(STOCK_WEIGHT_YR * 2.205 / 1000)) %>% 
   select(year, stock_weight_yr_lbs)
 ```
 
-```{r finalize-catch-data, eval=TRUE}
+```{r finalize-catch-data, eval=FALSE}
 catch_data <- catch_data %>% 
   rename(catch_weight_yr_lbs = values)
 ```
@@ -129,42 +129,46 @@ catch_data <- catch_data %>%
 **Goal:** Join on `year` six ways and explain which rows each join keeps.
 
 ```{r left-join}
-# catch_data %>% left_join(fish_stock_yearly)
+catch_data %>% 
+  left_join(fish_stock_yearly)
 ```
 
-> Replace this text with 1–2 sentences on `left_join()`.
+> `left_join()` kept 0 rows and 8 columns. The year column was not kept.
 
 ```{r right-join}
-# catch_data %>% right_join(fish_stock_yearly)
+catch_data %>% 
+  right_join(fish_stock_yearly)
 ```
 
-> Replace this text with 1–2 sentences on `right_join()`.
+> right_join() replaced all the data except year and stock_weight_yr_lbs with NA. There are 8 collumns.
 
 ```{r inner-join}
-# catch_data %>% inner_join(fish_stock_yearly)
+catch_data %>% 
+  inner_join(fish_stock_yearly)
 ```
 
-> Replace this text with 1–2 sentences on `inner_join()`.
+> inner_join() kept 0 rows and 8 columns. The year column was not kept.
 
 ```{r full-join}
-# catch_data %>% full_join(fish_stock_yearly)
+catch_data %>% 
+  full_join(fish_stock_yearly)
 ```
 
-> Replace this text with 1–2 sentences on `full_join()`.
+> full_join() replaced all the data except year and stock_weight_yr_lbs with NA. There are 8 collumns.
 
 ```{r anti-join-v1}
 catch_data %>% 
   anti_join(fish_stock_yearly)
 ```
 
-> Replace this text with 1–2 sentences on this `anti_join()`.
+> anti_join() kept 0 rows and 7 columns. The year column was not kept.
 
 ```{r anti-join-v2}
 fish_stock_yearly %>% 
   anti_join(catch_data)
 ```
 
-> Replace this text with 1–2 sentences on this `anti_join()`.
+> anti_join() kept year and stock_weight_yr_lbs. There are 2 columns.
 
 ## Exercise 7 — Pivot to long format
 
