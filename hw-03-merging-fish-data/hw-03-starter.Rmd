@@ -54,12 +54,12 @@ fish_stock <- read_csv("../data/great-lakes-fish-stock.csv")
 **Goal:** Keep `year`, `lake`, `species`, `region`, and `values` from `catch_data`, and `YEAR`, `MONTH`, `LAKE`, `STATE_PROV`, `SPECIES`, and `WEIGHT` from `fish_stock`.
 
 ```{r catch-data-subset}
-selected_catch_data <- catch_data %>%
+catch_data <- catch_data %>%
   select("year", "lake", "species", "region", "values")
 ```
 
 ```{r fish-stock-subset}
-selected_fish_stock <- fish_stock %>%
+fish_stock <- fish_stock %>%
   select("YEAR", "MONTH", "LAKE", "STATE_PROV", "SPECIES", "WEIGHT")
 ```
 
@@ -79,14 +79,14 @@ glimpse(fish_stock)
 ```{r filter-catch}
 catch_data <- catch_data %>% 
   filter(region == "U.S. Total",
-         species == "___",
-         lake == "___")
+         species == "CHS",
+         lake == "MI")
 ```
 
 ```{r filter-stock}
 fish_stock <- fish_stock %>% 
-  filter(___ %in% c("MI", "WI", "IL", "IN"),
-         SPECIES == "___",
+  filter(STATE_PROV %in% c("MI", "WI", "IL", "IN"),
+         SPECIES == "CHS",
          LAKE == "MI")
 ```
 
@@ -94,7 +94,9 @@ fish_stock <- fish_stock %>%
 
 **Goal:** Report `nrow`, `min(year)`, and `max(year)` for each filtered table with inline R.
 
-> Replace this text with three complete sentences that use inline R code.
+> There are ```nrow(catch_data)``` rows in catch data and ```nrow(fish_stock)``` in fish stock.
+> The first year is ```min(catch_data$year)```  and the last year is ```max(catch_data$year)``` in catch data.
+> The first year is ```min(fish_stock$year)```  and the last year is ```max(fish_stock$year)``` in fish stock.
 
 ## Exercise 5 — Annual stocking totals
 
